@@ -10,7 +10,7 @@ queue<pair<int, int>> q;
 vector<vector<int>> v;
 vector<vector<int>> visited;
 
-void DFS(int y, int x)
+void BFS(int y, int x)
 {
 	q.push({y, x});
 	visited[y][x] = 1;
@@ -47,6 +47,6 @@ int main()
 			scanf("%1d", &v[i][j]);
 
 
-	DFS(0,0);
+	BFS(0,0);
 	cout << visited[n-1][m-1] << endl;
 }
