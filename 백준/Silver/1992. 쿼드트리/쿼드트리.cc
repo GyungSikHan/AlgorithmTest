@@ -1,51 +1,52 @@
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
-int N{};
-char arr[65][65];
-string S{};
+int n;
+vector<vector<int>> v;
+string s;
 
 string DFS(int y, int x, int k)
 {
-    if(k == 1)
-        return string(1, arr[y][x]);
-    char temp = arr[y][x];
-    string result{};
-    
-    for (int i = y; i < y+k; i++)
-    {
-        for (int j = x; j < x+k; j++)
-        {
-            if(temp != arr[i][j])
-            {
-                result += '(';
-                result += DFS(y,x,k/2);
-                result += DFS(y,x+k/2,k/2);
-                result += DFS(y+k/2,x,k/2);
-                result += DFS(y+k/2,x+k/2,k/2);
-                result += ')';
-                return result;
-            }
-        }   
-    }
-    
-    return string(1, arr[y][x]);
+	if (k == 1)
+		return string(1, v[y][x]);
+	string result{};
+	char temp = v[y][x];
+
+	for (int i = y; i < k+y; i++)
+	{
+		for (int j = x; j < k+x; j++)
+		{
+			if(temp != v[i][j])
+			{
+				result += '(';
+				result += DFS(y, x, k / 2);
+				result += DFS(y, x+k/2, k/2);
+				result += DFS(y+k/2, x, k/2);
+				result += DFS(y+k/2, x+k/2, k/2);
+				result += ')';
+				return result;
+			}
+		}
+	}
+
+	return string(1, v[y][x]);
 }
 
 int main()
 {
-    cin >> N;
+	cin >> n;
+	v.resize(n, vector<int>(n, 0));
+	for (int i = 0; i < n; i++)
+	{
+		cin >> s;
+		for (int j = 0; j < n; j++)
+		{
+			v[i][j] = s[j];
+		}
+	}
 
-    for (int i = 0; i < N; i++)
-    {
-        cin>>S;
-        for (int j = 0; j < N; j++)
-        {
-            arr[i][j] = S[j];
-        }
-    }   
-        
-    cout<<DFS(0,0,N)<<endl;
+	cout << DFS(0, 0, n) << endl;
+
 }
-//범위가 쪼개져서 반복한다 == 재귀
