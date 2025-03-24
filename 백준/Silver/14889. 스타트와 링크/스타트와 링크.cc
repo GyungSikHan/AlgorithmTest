@@ -14,9 +14,9 @@ void DFS(int index, int pos)
 	{
 		int start{}, end{};
 
-		for (int i = 1; i <= n; i++)
+		for (int i = 0; i < n; i++)
 		{
-			for (int j = 1; j <= n; j++)
+			for (int j = 0; j < n; j++)
 			{
 				if (check[i] == true && check[j] == true)
 					start += board[i][j];
@@ -33,14 +33,12 @@ void DFS(int index, int pos)
 		return;
 	}
 
-	for (int i = pos; i <= n; i++)
+	for (int i = pos; i < n; i++)
 	{
 		check[i] = true;
 		DFS(index + 1, i + 1);
 		check[i] = false;
 
-		if(check[1] == false)
-			return;
 	}
 }
 
@@ -48,9 +46,9 @@ int main()
 {
 	cin >> n;
 
-	for (int i = 1; i <= n; i++)
+	for (int i = 0; i < n; i++)
 	{
-		for (int j = 1; j <= n; j++)
+		for (int j = 0; j < n; j++)
 		{
 			cin >> board[i][j];
 		}
