@@ -2,32 +2,39 @@
 #include <algorithm>
 using namespace std;
 
-bool compare(pair<float, int> a, pair<float, int> b) {
+bool compare(pair<float,int> a, pair<float, int> b)
+{
     if (a.first == b.first) 
-        return a.second < b.second;  // 실패율 같으면 스테이지 번호 오름차순
-    return a.first > b.first;        // 실패율 내림차순
+        return a.second < b.second; 
+    return a.first>b.first;
 }
 
 vector<int> solution(int N, vector<int> stages) {
     vector<int> answer;
-    vector<int> temp(N + 2, 0);  // 스테이지 1~N+1 저장용
-
-    for (int stage : stages) 
-        if (stage <= N) temp[stage]++;
-
-    vector<pair<float, int>> temp2;
-    int total = stages.size();
-
-    for (int i = 1; i <= N; i++) {
-        float rate = (total == 0) ? 0 : (float)temp[i] / total;
-        temp2.push_back({rate, i});
-        total -= temp[i];
+    vector<int> temp(N+2,0);
+    for(int i : stages)
+    {
+        if(i < N+1)
+        temp[i]++;
     }
+    
+    int faile = stages.size();
+    vector<pair<float, int>> temp2;
+    for (int i = 1; i <= N; i++)
+    {
+        if(faile != 0)
+            temp2.push_back({(float)temp[i]/faile, i});
+        else
+            temp2.push_back({0.0f, i});
+        faile-=temp[i];
+    }
+    
+    sort(temp2.begin(), temp2.end(),compare);
 
-    sort(temp2.begin(), temp2.end(), compare);
-
-    for (auto& p : temp2) 
-        answer.push_back(p.second);
+    for(pair<float,int> i : temp2)
+    {
+        answer.push_back(i.second);
+    }
 
     return answer;
 }
