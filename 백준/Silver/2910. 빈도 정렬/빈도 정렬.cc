@@ -1,37 +1,44 @@
-#include <iostream>
-#include <map>
-#include <vector>
 #include <algorithm>
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+
 using namespace std;
 
-int n, c, temp;
-map<int, int> m, m2;
-vector<pair<int, int>> v;
+int n, c;
+unordered_map<int,int> m,m_num;
 
-bool com(pair<int, int> a, pair<int, int> b)
+
+bool compare(pair<int,int> a, pair<int,int> b)
 {
-	if (a.first == b.first)
-		return m2[a.second] < m2[b.second];
-	return a.first > b.first;
+	if (a.second == b.second)
+	{
+		return m_num[a.first] < m_num[b.first];
+	}
+	return a.second > b.second;
 }
 
 int main()
 {
 	cin >> n >> c;
-
-	for (int i = 0; i < n; i++)
+	for (int i = 1; i <= n; i++)
 	{
-		cin >> temp;
-		m[temp]++;
-		if (m2[temp] == 0)
-			m2[temp] = i + 1;
-	}
-	for (pair<int, int> iter : m)
-		v.push_back({ iter.second,iter.first });
-	
-	sort(v.begin(), v.end(), com);
+		int a{};
+		cin >> a;
 
-	for (pair<int, int> iter : v)
-		for (int i = 0; i < iter.first; i++)
-			cout << iter.second << " ";
+
+		m[a]++;
+		if (m_num[a] == 0)
+		m_num[a] = i;
+	}
+
+	vector<pair<int, int>> v(m.begin(),m.end());
+
+	sort(v.begin(), v.end(),compare);
+	
+	for (const auto& iter : v)
+	{
+		for (int i = 0; i < iter.second; i++)
+			cout << iter.first << " ";
+	}
 }
