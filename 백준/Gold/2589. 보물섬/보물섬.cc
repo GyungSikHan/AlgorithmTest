@@ -1,21 +1,33 @@
 #include <iostream>
-#include <string.h>
 #include <queue>
-
+#include <set>
 using namespace std;
-int dx[4] = { -1,0,1,0 }, dy[4] = { 0,1,0,-1 };
-int n, m;
-char arr[51][51];
-int visited[51][51];
-int ret;
-int Count;
 
-void BFS(int x, int y)
+int dx[4]{ 0,-1,0,1 }, dy[4]{ -1,0,1,0 };
+char map[51][51];
+int n, m;
+set<pair<int, int>>se;
+
+void Print(const int visited[51][51])
 {
-	memset(visited, 0, sizeof(visited));
-	queue<pair<int, int>>q;
-	q.push({x, y});
+	cout << endl;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			cout << visited[i][j] << " ";
+		}
+		cout << endl;
+	}
+}
+
+int BFS(int x, int y)
+{
+	int temp{};
+	int visited[51][51]{};
 	visited[x][y] = 1;
+	queue<pair<int, int>>q;
+	q.push({ x,y });
 
 	while (q.empty() == false)
 	{
@@ -27,32 +39,47 @@ void BFS(int x, int y)
 		{
 			int nx = dx[i] + currx;
 			int ny = dy[i] + curry;
+			if (nx < 0 || nx >= n || ny < 0 || ny >= m)
+				continue;
+			if (map[nx][ny] == 'W')
+				continue;
 
-			if(nx >= 0 && nx < n && ny >= 0 && ny < m)
-			{
-				if(visited[nx][ny] == 0 && arr[nx][ny] == 'L')
-				{
-					visited[nx][ny] = visited[currx][curry] + 1;
-					q.push({ nx,ny });
+			if (visited[nx][ny] != 0)
+				continue;
 
-					ret = max(ret, visited[nx][ny]);
-				}
-			}
+			visited[nx][ny] = visited[currx][curry] + 1;
+			q.push({nx,ny}	);
 		}
+		//Print(visited);
+		temp = max(temp, visited[currx][curry]);
 	}
+
+	return temp-1;
 }
 
 int main()
 {
 	cin >> n >> m;
-	for (int i = 0; i < n; i++)
-		for (int j = 0; j < m; j++)
-			cin >> arr[i][j];
 
 	for (int i = 0; i < n; i++)
+	{
 		for (int j = 0; j < m; j++)
-			if(arr[i][j] == 'L')
-				BFS(i, j);
+		{
+			cin >> map[i][j];
+		}
+	}
 
-	cout << ret - 1<< endl;
+	int ret{};
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			if (map[i][j] == 'L')
+			{
+				ret = max(ret,BFS(i,j));
+			}
+		}
+	}
+
+	cout << ret << endl;
 }
