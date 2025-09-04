@@ -1,47 +1,54 @@
+//https://www.acmicpc.net/problem/12851 v
 #include <iostream>
+#include <vector>
 #include <queue>
+
 using namespace std;
-const int MAX = 200000;
+
 int n, k;
-int result = 987654321;
-int visited[MAX+4];
-long long cnt[MAX+4];
+
+int visited[100001];
+int cnt[100001];
+int Count;
+
 
 int main()
 {
 	cin >> n >> k;
-
-	if(n == k)
+	if (n == k)
 	{
-		cout << 0 << "\n" << 1 << endl;
+		cout << 0 << endl;
+		cout << 1 << endl;
 		return 0;
 	}
 
-	visited[n] = 1;
-	cnt[n] = 1;
 	queue<int> q;
 	q.push(n);
-
+	visited[n] = 1;
+	cnt[n] = 1;
 	while (q.empty() == false)
 	{
-		int now = q.front();
+		int curr = q.front();
 		q.pop();
 
-		for (int next : {now+1, now-1,now*2})
+		if (curr == k)
+			break;
+
+		for (int next : {curr+1,curr-1, curr*2})
 		{
-			if(next >= 0 && next <= MAX)
+			if (next < 0 || next > 100000)
+				continue;
+			if (visited[next] == 0)
 			{
-				if (visited[next] == 0)
-				{
-					q.push(next);
-					visited[next] = visited[now] + 1;
-					cnt[next] += cnt[now];
-				}
-				else if (visited[next] == visited[now] + 1)
-					cnt[next] += cnt[now];
+				q.push(next);
+				visited[next] = visited[curr] + 1;
+				cnt[next]+= cnt[curr];
 			}
+			else if (visited[next] == visited[curr] + 1)
+				cnt[next]+= cnt[curr];
 		}
 	}
 
-	cout << visited[k] - 1 << "\n" << cnt[k] << endl;
+	cout << visited[k]-1 << endl;
+	cout << cnt[k] << endl;
 }
