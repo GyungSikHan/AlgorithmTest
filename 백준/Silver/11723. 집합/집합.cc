@@ -32,13 +32,10 @@ int main()
 			if (str[0] == 'a')
 				arr[k] = 1;
 			else if (str[0] == 'r')
-			{
-				if (arr[k] == 1)
 					arr[k] = 0;
-			}
 			else if (str[0] == 'c')
 			{
-				cout << (arr[k] == 1 ? 1 : 0) << "\n";
+				cout << arr[k] << "\n";
 			}
 			else if (str[0] == 't')
 			{
