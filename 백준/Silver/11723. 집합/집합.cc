@@ -38,17 +38,11 @@ int main()
 			}
 			else if (str[0] == 'c')
 			{
-				if (arr[k] == 1)
-					cout << 1 << "\n";
-				else
-					cout << 0 << "\n";
+				cout << (arr[k] == 1 ? 1 : 0) << "\n";
 			}
 			else if (str[0] == 't')
 			{
-				if (arr[k] == 1)
-					arr[k] = 0;
-				else
-					arr[k] = 1;
+				arr[k] == 1 ? arr[k] = 0 : arr[k] = 1;
 			}
 		}
 	}
