@@ -1,43 +1,30 @@
+//https://www.acmicpc.net/problem/2234
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
+int dx[4]{ 0,-1,0,1 }, dy[4]{ -1,0,1,0 };
+
 int n, m;
 int arr[51][51];
 int visited[51][51];
-int visited2[51][51];
 int pa[51];
 int cnt, h = -1, sum;
 
-void Print()
-{
-	for (int i = 0; i < m; i++)
-	{
-		for (int j = 0; j < n; j++)
-		{
-			cout << visited[i][j] << " ";
-		}
-		cout << endl;
-	}
-}
-
 void DFS(int x, int y, int num)
 {
+	if (visited[x][y] != 0)
+		return;
 	h++;
 	visited[x][y] = num;
 	for (int i = 0; i < 4; i++)
 	{
 		if ((arr[x][y] & 1<<i) == 0)
 		{
-			if (1<< i == 1 && visited[x][y-1] == 0)
-				DFS(x,y-1,num);
-			else if (1<<i == 2 && visited[x-1][y] == 0)
-				DFS(x-1,y, num);
-			else if (1<<i==4 && visited[x][y + 1] == 0)
-				DFS(x,y+1, num);
-			else if (1<<i == 8 && visited[x+1][y] == 0)
-				DFS(x+1,y, num);
+			int nx = dx[i] + x;
+			int ny = dy[i] + y;
+			DFS(nx,ny,num);
 		}
 	}
 }
@@ -51,7 +38,7 @@ int main()
 			cin >> arr[i][j];
 
 	int num = 1;
-	int temp{};
+	
 	for (int i = 0; i < m; i++)
 	{
 		for (int j = 0; j < n; j++)
@@ -61,7 +48,7 @@ int main()
 				h = 0;
 				DFS(i,j,num);
 				pa[num] = h;
-				temp = max(temp,h);
+				cnt = max(cnt,h);
 				num += 1;
 			}
 		}
@@ -88,6 +75,6 @@ int main()
 		}
 	}
 	cout << num-1 << "\n";
-	cout << temp << "\n";
+	cout << cnt << "\n";
 	cout << sum;
 }
