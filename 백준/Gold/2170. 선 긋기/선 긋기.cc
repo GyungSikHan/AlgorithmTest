@@ -1,32 +1,43 @@
-#include <cstdio>
-#include <cstring>
 #include <algorithm>
 #include <iostream>
-#include <unordered_map>
-using namespace std; 
-typedef pair<int, int> P;
-P L[1000004];
-int n, from, to, l, r, ret; 
-int main(){
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL); 
-    cin >> n; 
-    for(int i = 0; i < n; i++){ 
-        cin >> from >> to;
-        L[i] = P(from, to);
-    }
-    sort(L, L + n); 
-    l = L[0].first; r = L[0].second; 
-    for(int i = 1; i < n; i++){ 
-        if(r < L[i].first){ 
-            ret += (r - l); 
-            l = L[i].first;
-            r = L[i].second;
-        }else if(L[i].first <= r && L[i].second >= r){ 
-            r = L[i].second;
-        }
-    }
-    ret += r - l;
-    cout << ret << '\n';
+#include <tuple>
+#include <vector>
+
+using namespace std;
+
+int n;
+int x, y;
+pair<int,int> v[1000001];
+//vector<pair<int, int >>v;
+int main()
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
+	cout.tie(nullptr);
+
+	cin >> n;
+	//v.resize(n, pair<int, int>({}));
+	for (int i = 0; i < n; i++)
+	{
+		cin >> x >> y;
+		v[i] = make_pair(x,y);
+	}
+
+	sort(&v[0], &v[0] + n);
+	int start = v[0].first, end = v[0].second, sum{};
+	for (int i = 1; i < n; i++)
+	{
+		if (v[i].first > end)
+		{
+			sum += end - start;
+			start = v[i].first;
+			end = v[i].second;
+		}
+		else if (v[i].first <= end && v[i].second >= end)
+			end = v[i].second;
+	}
+
+	sum += end - start;
+
+	cout << sum;
 }
