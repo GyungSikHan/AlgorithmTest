@@ -1,47 +1,55 @@
 #include <iostream>
-#include <stack>
+#include <queue>
 #include <vector>
 #include <string>
+#include <stack>
 #include <algorithm>
+
 using namespace std;
 
-string s;
-string boom;
-stack<char> st;
-
+string s{};
+string boom{};
 int main()
 {
 	cin >> s;
 	cin >> boom;
-	for (char c : s)
+
+	stack<char> st;
+
+	for (int i = 0; i < s.size(); i++)
 	{
-		st.push(c);
-		if (st.size() >= boom.size() && st.top() == boom[boom.size() - 1])
+		st.push(s[i]);
+
+		if (st.size() >= boom.size() && st.top() == boom[boom.size()-1])
 		{
 			string temp{};
-			for (int i = 0; i < boom.size(); i++)
+			for (int j = 0; j < boom.size(); j++)
 			{
 				temp += st.top();
 				st.pop();
 			}
-			reverse(temp.begin(),temp.end());
+
+			reverse(temp.begin(), temp.end());
+
 			if (temp != boom)
-				for (char iter : temp)
-					st.push(iter);
+				for (int j = 0; j < temp.size(); j++)
+					st.push(temp[j]);
 		}
 	}
+
+	string ret{  };
 
 	if (st.empty() == true)
 		cout << "FRULA";
 	else
 	{
-		string temp{};
 		while (st.empty() == false)
 		{
-			temp += st.top();
+			ret += st.top();
 			st.pop();
 		}
-		reverse(temp.begin(), temp.end());
-		cout << temp;
+		reverse(ret.begin(),ret.end());
+
+		cout << ret;
 	}
 }
