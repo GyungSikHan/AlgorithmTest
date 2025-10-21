@@ -4,10 +4,8 @@
 #include <algorithm>
 using namespace std;
 
-int n, d, p, result;
-vector<pair<int, int>>v;
-priority_queue<int, vector<int>, greater<int>> pq;
-
+int n, p, d;
+vector<pair<int, int>> v;
 int main()
 {
 	cin >> n;
@@ -18,17 +16,21 @@ int main()
 	}
 
 	sort(v.begin(), v.end());
+	priority_queue<int,vector<int>, greater<int> > q;
+	int sum{};
 	for (int i = 0; i < n; i++)
 	{
-		pq.push(v[i].second);
-		if (pq.size() > v[i].first)
-			pq.pop();
+		q.push(v[i].second);
+
+		if (q.size() > v[i].first)
+			q.pop();
 	}
 
-	while (pq.empty() == false)
+	while (q.empty() == false)
 	{
-		result += pq.top();
-		pq.pop();
+		sum += q.top();
+		q.pop();
 	}
-	cout << result << endl;
+
+	cout << sum;
 }
