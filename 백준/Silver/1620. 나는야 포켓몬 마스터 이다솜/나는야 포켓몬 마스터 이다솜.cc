@@ -1,38 +1,35 @@
 #include <iostream>
-#include <vector>
 #include <map>
 #include <string>
+
 using namespace std;
 
-int main() {
+int n, m;
+map<string, int> m1;
+map<int, string> m2;
+string s;
+
+int main()
+{
     ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+    
+	cin >> n >> m;
 
-    int n, m;
-    cin >> n >> m;
+	for (int i = 1; i <= n; i++)
+	{
+		cin >> s;
+		m1.insert({ s,i });
+		m2.insert({ i,s });
+	}
 
-    vector<string> pokemons(n + 1);
-    map<string, int> pokemon_map;
-
-    for (int i = 1; i <= n; i++) {
-        string name;
-        cin >> name;
-        pokemons[i] = name;
-        pokemon_map[name] = i;
-    }
-
-    for (int i = 0; i < m; i++) {
-        string query;
-        cin >> query;
-
-        if (isdigit(query[0])) {
-            int index = stoi(query);
-            cout << pokemons[index] << '\n';
-        } else {
-            cout << pokemon_map[query] << '\n';
-        }
-    }
-
-    return 0;
+	for (int i = 0; i < m; i++)
+	{
+		cin >> s;
+		if (atoi(s.c_str()) == 0)
+			cout << m1[s] << "\n";
+		else
+			cout << m2[atoi(s.c_str())] << "\n";
+	}
 }
