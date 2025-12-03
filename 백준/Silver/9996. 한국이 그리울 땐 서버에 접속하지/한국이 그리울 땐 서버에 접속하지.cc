@@ -1,30 +1,31 @@
-#include <iostream>
-#include <vector>
+#include<bits/stdc++.h>
 using namespace std;
 
-int n{};
-string s{}, ori_s, pre, suf;
+int n, len;
+string s, s2;
 
 int main()
 {
     cin>>n;
-    cin>>ori_s;
-    int pos = ori_s.find('*');
-    pre=ori_s.substr(0,pos);
-    suf=ori_s.substr(pos+1);
+    cin>>s;
 
-    for (int i = 0; i < n; i++)
+    len = s.find('*');
+
+    string t = s.substr(0, len);
+    string t2 = s.substr(len+1);
+
+    for(int i = 0; i < n; i++)
     {
-        cin>>s;
-        if(pre.size() + suf.size() > s.size())
-            cout<<"NE"<<endl;
+        cin>>s2;
+
+        if(s2.size() < t.size() + t2.size() )
+            cout<<"NE\n";
         else
         {
-            if(pre == s.substr(0,pre.size()) && suf == s.substr(s.size() - suf.size()))
-                cout<<"DA"<<endl;
+            if(s2.substr(0, t.size()) != t|| s2.substr(s2.size()-t2.size()) != t2)
+                cout<<"NE\n";
             else
-                cout<<"NE"<<endl;
+                cout<<"DA\n";
         }
     }
-    
 }
