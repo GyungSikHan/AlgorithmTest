@@ -20,12 +20,10 @@ int main()
 
         if(s2.size() < t.size() + t2.size() )
             cout<<"NE\n";
+
+        else if(s2.substr(0, t.size()) != t|| s2.substr(s2.size()-t2.size()) != t2)
+            cout<<"NE\n";
         else
-        {
-            if(s2.substr(0, t.size()) != t|| s2.substr(s2.size()-t2.size()) != t2)
-                cout<<"NE\n";
-            else
-                cout<<"DA\n";
-        }
+            cout<<"DA\n";
     }
 }
