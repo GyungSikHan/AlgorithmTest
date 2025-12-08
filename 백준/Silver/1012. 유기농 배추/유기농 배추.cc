@@ -1,62 +1,60 @@
-#include<iostream>
-#include<vector>
+#include <iostream>
+#include <vector>
 
 using namespace std;
 
-int T, M,N,K;
+int dx[4] = {0, -1, 0, 1};
+int dy[4] = {-1, 0, 1, 0};
+int t, n, m, k;
+vector<vector<int>> board;
+vector<vector<bool>> visited;
 
-int dY[4]{-1,0,1,0};
-int dX[4]{0,1,0,-1};      
-
-int maps[51][51]{};
-bool visited[51][51]{};
-
-void DFS(int y, int x)
+void DFS(int x, int y) 
 {
-    visited[y][x] = true;
-    for (int i = 0; i < 4; i++)
-    {
-        int Y = y + dY[i];
-        int X = x + dX[i];
+  visited[x][y] = true;
+  for (int i = 0; i < 4; i++) 
+  {
+    int nx = x + dx[i];
+    int ny = y + dy[i];
+    if (nx < 0 || nx >= n || ny < 0 || ny >= m)
+      continue;
+    if (board[nx][ny] == 0 || visited[nx][ny] == true)
+      continue;
 
-        if(Y >= 0 && Y < N && X >= 0 && X < M)
-        {
-            if(maps[Y][X] == 1 && visited[Y][X] == false)
-                DFS(Y,X);
-        }
-    }
+    DFS(nx, ny);
+  }
 }
 
-int main()
+int main() 
 {
-    cin>>T;
+  cin >> t;
+  while (t > 0) 
+  {
+    t--;
+    int count{};
+    cin >> m >> n >> k;
+    board.assign(n, vector<int>(m, 0));
+    visited.assign(n, vector<bool>(m, false));
 
-    while (T--)
+    for (int i = 0; i < k; i++)
     {
-        cin>>M>>N>>K;
-        int count{};
-        fill(&maps[0][0], &maps[0][0]+51*51, 0);
-        fill(&visited[0][0], &visited[0][0]+51*51, false);
-        
-        for (int i = 0; i < K; i++)
-        {
-            int x{},y{};
-            cin>>x>>y;
-            maps[y][x] = 1;
-        }
-        
-        for (int i = 0; i < N; i++)
-        {
-            for (int j = 0; j < M; j++)
-            {
-                if(maps[i][j] == 1 && visited[i][j] == false)
-                {
-                    DFS(i,j);
-                    count++;
-                }
-            }
-            
-        }
-        cout<<count<<endl;
+      int a{}, b{};
+      cin >> a >> b;
+      board[b][a] = 1;
     }
+
+    for (int i = 0; i < n; i++) 
+    {
+      for (int j = 0; j < m; j++) 
+      {
+        if (board[i][j] == 1 && visited[i][j] == false) 
+        {
+          count++;
+          DFS(i, j);
+        }
+      }
+    }
+
+    cout << count << endl;
+  }
 }
