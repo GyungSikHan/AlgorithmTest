@@ -1,46 +1,47 @@
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
+
 using namespace std;
 
-int h,w;
-char c;
-bool bC;
-int Data{};
+int h, w;
+char c[104][104];
+int a[104][104];
 
 int main()
 {
-    cin >> h >> w;
-    vector<vector<int>> v(h,vector<int>(w, 0));
-
-
-    for (int i = 0; i < h; i++)
+    cin>>h>>w;
+    memset(a,-1,sizeof(a));
+    for(int i = 1; i<= h;i++)
     {
-        for (int j = 0; j < w; j++)
+        for(int j =1;j<= w;j++)
         {
-
-            cin >> c;
-            if(c == 'c')
-            {
-                bC = true;
-                Data = 0;
-            }
-            else if(bC == true)
-                Data++;
-            else if(bC == false)
-                Data = -1;
-            v[i][j] = Data;
-        }  
-        Data = 0;
-        bC = false;
-    }
-    
-    for (int i = 0; i < h; i++)
-    {
-        for (int j = 0; j < w; j++)
-        {
-            cout<<v[i][j]<<" ";
+            cin>>c[i][j];
         }
-        cout<<endl;
     }
-    
+
+    for(int i = 1; i <= h;i++)
+    {
+        for(int j = 1; j <= w; j++)
+        {
+            if(c[i][j] == 'c')
+                a[i][j] = 0;
+            else if(c[i][j] == '.')
+            {
+                if(a[i][j - 1] == -1)
+                    continue;
+                else
+                    a[i][j] = a[i][j-1]+1;
+            }
+        }
+    }
+
+    for(int i = 1; i<= h;i++)
+    {
+        for(int j =1;j<= w;j++)
+        {
+            cout<<a[i][j]<<" ";
+        }
+        cout<<"\n";
+    }
+
+
 }
