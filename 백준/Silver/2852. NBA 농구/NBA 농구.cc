@@ -1,46 +1,50 @@
 #include <iostream>
+#include <vector>
+#include <string>
+
 using namespace std;
 
-int toSec(string t) {
-    return stoi(t.substr(0, 2)) * 60 + stoi(t.substr(3, 2));
+int n,t,team1,team2,sum1,sum2;
+string s,Prev;
+
+int ChangeInt(string data)
+{
+	return stoi(data.substr(0, 2)) * 60 + stoi(data.substr(3, 2));
 }
 
-string toMMSS(int sec) {
-    char buf[6];
-    sprintf(buf, "%02d:%02d", sec / 60, sec % 60);
-    return string(buf);
+void Solution(int& sum, string data)
+{
+	sum += ChangeInt(data) - ChangeInt(Prev);
 }
 
-int main() {
-    int N, score1 = 0, score2 = 0;
-    int time1 = 0, time2 = 0;
-    int leader = 0, leadStart = 0;
-    cin >> N;
+string ChangeString(int data)
+{
+	string hour = "00" + std::to_string(data / 60);
+	string se = "00" + std::to_string(data % 60);
 
-    for (int i = 0; i < N; ++i) {
-        int team;
-        string time;
-        cin >> team >> time;
-        int curTime = toSec(time);
+	return hour.substr(hour.size()-2,2) + ":" + se.substr(se.size()-2,2);
+}
 
-        if (team == 1) score1++;
-        else score2++;
+int main()
+{
+	cin >> n;
 
-        int newLeader = 0;
-        if (score1 > score2) newLeader = 1;
-        else if (score2 > score1) newLeader = 2;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> t >> s;
+		if (team1 > team2)
+			Solution(sum1,s);
+		else if (team1 < team2)
+			Solution(sum2,s);
+		t == 1 ? team1++ : team2++;
+		Prev = s;
+	}
 
-        if (leader != newLeader) {
-            if (leader == 1) time1 += curTime - leadStart;
-            else if (leader == 2) time2 += curTime - leadStart;
+	if (team1 > team2)
+		Solution(sum1,"48:00");
+	else if (team1 < team2)
+		Solution(sum2,"48:00");
 
-            leader = newLeader;
-            leadStart = curTime;
-        }
-    }
-
-    if (leader == 1) time1 += 2880 - leadStart;
-    else if (leader == 2) time2 += 2880 - leadStart;
-
-    cout << toMMSS(time1) << '\n' << toMMSS(time2) << '\n';
+	cout << ChangeString(sum1) << endl;
+	cout << ChangeString(sum2) << endl;
 }
