@@ -1,66 +1,72 @@
-#include <iostream>
-#include <string>
-#include <vector>
+#include <bits/stdc++.h>
 
 using namespace std;
 
 int k;
-char arr[10];
-int nums[10];
-unsigned long long mx;
-unsigned long long mi = INTMAX_MAX;
-bool Check(int index, int data, int data2)
-{
-	if (arr[index] == '<')
-		return data < data2;
+long long mi = 10000000000, ma = -1;
+int visited[10];
+vector<char> v;
+vector<int> ret;
+string retmi,retma;
 
-	return data > data2;
+bool Check(int a, int b, char c)
+{
+    if (c == '<')
+        return a < b;
+    return a > b;
 }
 
-void DFS(int index, unsigned long long data, int prev)
+void Solution(int data, int index, long long temp)
 {
-	if (index == k)
-	{
-		mx = max(mx,data);
-		mi=min(mi,data);
-		return;
-	}
+    if(index == k)
+    {
+        
+        mi = min(mi, temp);
+        ma = max(ma, temp);
+        return;
+    }
 
-	for (int i = 0; i < 10; i++)
-	{
-		if (i == prev)
-			continue;
-		if (nums[i] != 0)
-			continue;
-		if (Check(index, prev, i) == false)
-			continue;
-
-		nums[i] = 1;
-		DFS(index + 1, data*10+i, i);
-		nums[i] = 0;
-	}
+    for(int i = 0; i < 10; i++)
+    {
+        if(visited[i] == 0 && Check(data, i, v[index]) == true)
+        {
+            visited[i] = 1;
+            Solution(i, index+1, temp*10+i);
+            visited[i] = 0;
+        }
+    }
 }
 
 int main()
 {
-	cin >> k;
-	for (int i = 0; i < k; i++)
-		cin >> arr[i];
-	
-	for (int i = 0; i < 10; i++)
-	{
-		nums[i] = 1;
-		DFS(0,i, i);
-		nums[i] = 0;
-	}
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
 
-	string temp = to_string(mx);
-	string temp2 = to_string(mi);
-	if (temp.size() < k + 1)
-		temp = "0" + temp;
-	if (temp2.size() < k + 1)
-		temp2 = "0" + temp2;
+    cin >> k;
+    v.resize(k, '\0');
+    ret.resize(k + 1, 0);
 
-	cout << temp << endl;
-	cout << temp2 << endl;
+    for (int i = 0; i < k; i++)
+    {
+        cin >> v[i];
+    }
+
+    for(int i = 0; i < 10;i ++)
+    {
+        visited[i] = 1;
+        Solution(i, 0, i);
+        visited[i] = 0;
+    }
+
+    retmi = to_string(mi);
+    retma = to_string(ma);
+
+    if(retmi.size() == k)
+        retmi = '0'+retmi;
+    if(retma.size() == k)
+        retma = '0'+retma;
+
+    cout<<retma<<"\n";
+    cout<<retmi<<"\n";
 }
