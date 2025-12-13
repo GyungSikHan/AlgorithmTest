@@ -1,132 +1,128 @@
-//https://www.acmicpc.net/problem/4179
-#include <iostream>
-#include <vector>
-#include <queue>
-#include <stack>
+#include<bits/stdc++.h>
 
 using namespace std;
 
-int dy[4]{ 0,-1,0,1 }, dx[4]{ -1,0,1,0 };
+int dy[4]{0,-1,0,1},dx[4]{-1,0,1,0};
 
-char map[1001][1001];
-int jvisited[1001][1001];
+int r,c, ret;
+vector<pair<int, int>>F;
+pair<int, int> J;
+char v[1001][1001];
 int fvisited[1001][1001];
-int r, c;
-vector<pair<int, int>> fire;
-pair<int, int>je;
+int jvisited[1001][1001];
 
-void Print(const int visited[1001][1001])
+void print(int a[1001][1001])
 {
-	cout << endl;
-	for (int i = 0; i < r; i++)
-	{
-		for (int j = 0; j < c; j++)
-		{
-			cout << visited[i][j] << " ";
-		}
-		cout << endl;
-	}
+    cout<<endl;
+    for(int i = 0; i < r; i++)
+    {
+        for(int j= 0; j<c;j++)
+        {
+            cout<<a[i][j]<<" ";
+        }
+        cout<<endl;
+    }
 }
 
-void FBFS()
+void fBFS()
 {
-	queue<pair<int, int>>q;
-	for (auto iter : fire)
-		q.push({ iter.first,iter.second });
+    queue<pair<int, int>> qu;
+    for(auto iter : F)
+    {
+        qu.push(iter);
+        fvisited[iter.first][iter.second] = 1;
+    }
 
-	while (q.empty() == false)
-	{
-		int curry = q.front().first;
-		int currx = q.front().second;
-		q.pop();
-		
-		for (int i = 0; i < 4; i++)
-		{
-			int ny = dy[i] + curry;
-			int nx = dx[i] + currx;
+    while (qu.empty() == false)
+    {
+        int y = qu.front().first;
+        int x = qu.front().second;
+        qu.pop();
 
-			if (ny < 0 || ny >= r || nx < 0 || nx >=c)
-				continue;
-			if (map[ny][nx] == '#')
-				continue;
-			if (fvisited[ny][nx] != 0)
-				continue;
-			fvisited[ny][nx] = fvisited[curry][currx] + 1;
-			q.push({ny,nx});
-		}
-		//Print(fvisited);
-	}
+        for(int i = 0; i < 4; i++)
+        {
+            int ny = y+dy[i];
+            int nx = x+dx[i];
+
+            if(ny < 0 || ny >= r || nx < 0 || nx >= c)
+                continue;
+            if(v[ny][nx] == '#')
+                continue;
+            if(fvisited[ny][nx] != 0)
+                continue;
+            fvisited[ny][nx] = fvisited[y][x]+1;
+            qu.push({ny,nx});
+        }
+        //print(fvisited);
+    }
 }
 
-int JBFS(int y, int x)
+bool jBFS()
 {
-	queue<pair<int, int>>q;
-	q.push({ y,x });
+    bool ex{};
+    queue<pair<int, int>>qu;
+    qu.push(J);
+    jvisited[J.first][J.second] = 1;
+    while(qu.empty() == false)
+    {
+        bool b{};
+        int y = qu.front().first;
+        int x = qu.front().second;
+        qu.pop();
 
-	while (q.empty() == false)
-	{
-		int curry = q.front().first;
-		int currx = q.front().second;
-		q.pop();
-		if ((curry == 0 || curry == r-1) || (currx == 0 || currx == c - 1))
-			return jvisited[curry][currx];
-
-		for (int i = 0; i < 4; i++)
-		{
-			int ny = dy[i] + curry;
-			int nx = dx[i] + currx;
-
-			if (ny < 0 || ny >= r || nx < 0 || nx >= c)
-				continue;
-			if (map[ny][nx] != '.')
-				continue;
-			if (jvisited[ny][nx] != 0)
-				continue;
-			if (fvisited[ny][nx] != 0 && fvisited[ny][nx] <= jvisited[curry][currx]+1)
-				continue;
-			jvisited[ny][nx] = jvisited[curry][currx] + 1;
-			q.push({ ny,nx });
-		}
-		//Print(jvisited);
-	}
-
-
-	return 0;
+        //cout<<y<<" "<<x<<endl;
+        if((y == 0 &&(x >= 0 && x < c)) || (y == r - 1 &&(x >= 0 && x < c)) || (x == 0 && ( y >= 0 && y < r)) || (x == c-1 &&( y >= 0 && y < r)))
+        {
+            ret = jvisited[y][x];
+            ex = true;
+            break;
+        }
+        for(int i = 0; i < 4; i++)
+        {
+            int ny = y + dy[i];
+            int nx = x + dx[i];
+            
+            if(ny<0||ny>=r||nx<0||nx>=c)
+                continue;
+            if(v[ny][nx] == '#')
+                continue;
+            if(fvisited[ny][nx] != 0 &&fvisited[ny][nx] <= jvisited[y][x] + 1)
+                continue;
+            if(jvisited[ny][nx] != 0)
+                continue;
+            b = true;
+            jvisited[ny][nx] = jvisited[y][x] + 1;
+            qu.push({ny,nx});
+        }
+        // cout<<"j"<<endl;
+        // print(jvisited);   
+    }
+    return ex;
 }
 
 int main()
 {
-	cin >> r >> c;
-	for (int i = 0; i < r; i++)
-	{
-		for (int j = 0; j < c; j++)
-		{
-			cin >> map[i][j];
-			if (map[i][j] == 'J')
-			{
-				jvisited[i][j] = 1;
-				je = make_pair(i,j);
-			}
-			else if (map[i][j] == 'F')
-			{
-				fvisited[i][j] = 1;
-				fire.push_back( make_pair(i, j));
-			}
-		}
-	}
+    
+    cin>>r>>c;
 
-	FBFS();
-	int temp = JBFS(je.first, je.second);
-	if (temp != 0)
-		cout << temp << endl;
-	else
-		cout << "IMPOSSIBLE" << endl;
+    for(int i = 0; i < r; i++)
+    {
+        for(int j = 0; j < c; j++)
+        {
+            cin>>v[i][j];
+            if(v[i][j] == 'F')
+                F.push_back({i,j});
+            if(v[i][j] == 'J')
+                J = make_pair(i,j);
+        }
+    }
+
+    fBFS();
+    bool ex = jBFS();
+
+    if(ex == 0)
+        cout<<"IMPOSSIBLE";
+    else
+        cout<<ret;
+
 }
-
-//문제에서 불이 없을때를 해결하지 못해 틀린 것 같다
-//예를 들어
-//3 3
-//...
-//.J.
-//...
-//이 경우 불이 없다는 예외처리를 하지 않아 IMPOSSIBLE이 나왔었다
