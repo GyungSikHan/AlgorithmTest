@@ -1,45 +1,47 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
+#include<bits/stdc++.h>
 
 using namespace std;
 
-int dx[4]{ 0,-1,0,1 }, dy[4]{ -1,0,1,0 };
+int dy[4]{0,-1,0,1}, dx[4]{-1,0,1,0};
 
-int r, c;
+int r,c,ret = 1;
 char arr[21][21];
-int visited[26];
-vector<char> v;
-int ret;
+int eng[26];
 
-void DFS(int x, int y, int count)
-{
-	ret = max(ret, count);
+void DFS(int y, int x, int count)
+{    
+    for(int i = 0;i<4;i++)
+    {
+        int ny = dy[i]+y;
+        int nx= dx[i]+x;
 
-	for (int i = 0; i < 4; i++)
-	{
-		int nx = dx[i] + x;
-		int ny = dy[i] + y;
-		if (nx < 0 || nx >= r || ny < 0 || ny >= c)
-			continue;
-		int next = arr[nx][ny] - 'A';
-		if (visited[next] != 0)
-			continue;
-		visited[next] = 1;
-		DFS(nx,ny,count+1);
-		visited[next] = 0;
-	}
+        if(ny<0||ny>=r||nx<0||nx >=c)
+            continue;
+        if(eng[arr[ny][nx] - 'A'] != 0)
+        {
+            ret = max(ret, count);
+            continue;
+        }
+
+        eng[arr[ny][nx] - 'A'] = 1;
+        DFS(ny,nx,count+1);
+        eng[arr[ny][nx] - 'A'] = 0;
+    }
 }
 
 int main()
 {
-	cin >> r >> c;
+    cin>>r>>c;
 
-	for (int i = 0; i < r; i++)
-		for (int j = 0; j < c; j++)
-			cin >> arr[i][j];
-	visited[arr[0][0] - 'A'] = 1;
-	DFS(0,0,1);
+    for(int i = 0; i<r; i++)
+    {
+        for(int j = 0; j<c;j++)
+        {
+            cin>>arr[i][j];
+        }
+    }
+    eng[arr[0][0] - 'A'] = 1;
+    DFS(0,0,1);
 
-	cout << ret;
+    cout<<ret;
 }
