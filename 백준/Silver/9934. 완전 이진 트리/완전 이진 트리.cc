@@ -1,40 +1,42 @@
-#include <iostream>
-#include <vector>
-#include <cmath>
+#include<bits/stdc++.h>
+
 using namespace std;
 
 int k;
-int length;
-int arr[1100];
-vector<vector<int>> v;
-void Go(int start, int end, int level)
+vector<int> v;
+vector<vector<int>>ret;
+void Solution(int s, int e, int depth)
 {
-	if (start > end)
-		return;
-	if (start == end)
-	{
-		v[level].push_back(arr[start]);
-		return;
-	}
-	int mid = (start + end) / 2;
-	v[level].push_back(arr[mid]);
-	Go(start, mid - 1, level + 1);
-	Go(mid + 1, end, level + 1);
+    if(depth == k)
+        return;
+    if(s>e)
+        return;
+
+    int mid = (s+e)/2;
+    ret[depth].push_back(v[mid]);
+    Solution(s,mid-1,depth+1);
+    Solution(mid+1, e, depth+1);
 }
 
 int main()
 {
-	cin >> k;
-	length = (int)(pow(2,k)) - 1;
-	v.resize(length+1);
-	for (int i = 0; i < length; i++)
-		cin >> arr[i];
-	Go(0, length, 1);
+    cin>>k;
+    ret.resize(k);
+    for(int i = 0; i < pow(2,k)-1; i++)
+    {
+        int a{};
+        cin>>a;
+        v.push_back(a);
+    }
+    int temp = k;
+    Solution(0,v.size()-1,0);
 
-	for (int i = 1; i <= k; i++)
-	{
-		for (auto a : v[i])
-			cout << a <<" ";
-		cout << endl;
-	}
+    for(auto i : ret)
+    {
+        for(auto iter : i)
+        {
+            cout<<iter<<" ";
+        }
+        cout<<endl;
+    }
 }
