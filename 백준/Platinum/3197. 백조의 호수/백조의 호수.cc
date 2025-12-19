@@ -1,72 +1,115 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
+
 using namespace std;
-const int max_n = 1501;
-const int dx[4] = {1, 0, -1, 0};
-const int dy[4] = {0, 1, 0, -1}; 
-int visited_swan[max_n][max_n], visited[max_n][max_n], R, C, day, swanY, swanX, y, x;
-char a[max_n][max_n]; 
-queue<pair<int, int>> waterQ, water_tempQ, swanQ, swan_tempQ;
+
+const int Max = 1501;
+int dy[4]{0,-1,0,1}, dx[4]{-1,0,1,0};
+
+int r,c,day;
+char arr[Max][Max];
+int visited[Max][Max], visitedSwan[Max][Max];
+//int swanY, swanX, y, x;
 string s;
-void Qclear(queue<pair<int, int>> &q){
-   queue<pair<int, int>> empty;
-   swap(q,empty);
-}  
-void water_melting(){
-    while(waterQ.size()){
-		tie(y, x) = waterQ.front();  
-        waterQ.pop();
-        for(int i = 0; i < 4; i++){
-            int ny = y + dy[i];
-            int nx = x + dx[i];
-            if(ny < 0 || ny >= R || nx < 0 || nx >= C || visited[ny][nx])continue;
-            if(a[ny][nx] == 'X'){
-                visited[ny][nx] = 1; 
-                water_tempQ.push({ny, nx});
-                a[ny][nx] = '.'; 
-            } 
-        }
-    }
+queue<pair<int, int>> swanQ, waterQ, tempSwanQ, tempWaterQ;
+
+pair<int, int> swan;
+
+void Clear(queue<pair<int, int>>& qu)
+{
+    queue<pair<int, int>> temp;
+    swap(qu, temp);
 }
-bool move_swan(){
-    while(swanQ.size()){
-		tie(y, x) = swanQ.front(); 
+
+bool MoveSwan()
+{
+    while(swanQ.empty() == false)
+    {
+        int y = swanQ.front().first;
+        int x = swanQ.front().second;
         swanQ.pop();
-        for(int i = 0; i < 4; i++){
-            int ny = y + dy[i];
-            int nx = x + dx[i];
-            if(ny < 0 || ny >= R || nx < 0 || nx >= C || visited_swan[ny][nx])continue;
-            visited_swan[ny][nx] = 1;
-            if(a[ny][nx] == '.')swanQ.push({ny, nx});
-            else if(a[ny][nx] == 'X') swan_tempQ.push({ny, nx});
-            else if(a[ny][nx] == 'L') return true;
+
+        for(int i = 0; i < 4; i++)
+        {
+            int ny = dy[i]+y;
+            int nx = dx[i]+x;
+            if(ny<0||r<= ny || nx < 0 || c <= nx)
+                continue;
+            if(visitedSwan[ny][nx] == 1)
+                continue;
+            visitedSwan[ny][nx] = 1;
+            if(arr[ny][nx] == '.') 
+                swanQ.push({ny,nx});
+            else if(arr[ny][nx] == 'X') 
+                tempSwanQ.push({ny,nx});
+            else if(arr[ny][nx] == 'L')
+                return true;
         }
     }
-	return false;
+    return false;
 }
-int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
-    cin >> R >> C;
-    for(int i = 0; i < R; i++){
-        cin >> s;
-        for(int j = 0; j < C; j++){
-            a[i][j] = s[j];
-            if(a[i][j] == 'L'){swanY = i; swanX = j;}
-            if(a[i][j] == '.' || a[i][j] == 'L')visited[i][j] = 1, waterQ.push({i, j});
+
+void BrokenWater()
+{
+    while(waterQ.size() != 0)
+    {
+        int y = waterQ.front().first;
+        int x = waterQ.front().second;
+        waterQ.pop();
+
+        for(int i = 0; i<4; i++)
+        {
+            int ny = dy[i]+y;
+            int nx = dx[i]+x;
+            if(ny<0|| r <= ny || nx < 0 || c <= nx)
+                continue;
+            if(visited[ny][nx] == 1)
+                continue;
+            if(arr[ny][nx] == 'X')
+            {
+                visited[ny][nx] = 1;
+                tempWaterQ.push({ny,nx});
+                arr[ny][nx] = '.';
+            }
         }
-    } 
-    swanQ.push({swanY, swanX}); 
-    visited_swan[swanY][swanX] = 1; 
-    while(true){  
-        if(move_swan()) break;
-        water_melting();
-        waterQ = water_tempQ;
-        swanQ = swan_tempQ;
-        Qclear(water_tempQ);
-        Qclear(swan_tempQ);
-        day++;
     }
-    cout << day << "\n";
-    return 0;
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+    cin>>r>>c;
+
+    for(int i = 0; i < r;i++)
+    {
+        cin>>s;
+        for(int j = 0; j < c; j++)
+        {
+            arr[i][j] = s[j];
+            if(arr[i][j] == 'L')
+            {
+                 swan = make_pair(i, j);   
+            }
+            if(arr[i][j] == '.' || arr[i][j] == 'L')
+            {
+                visited[i][j] = 1;
+                waterQ.push({i,j});
+            }
+        }
+    }
+    swanQ.push(swan);
+    visitedSwan[swan.first][swan.second] = 1;
+    
+    while(MoveSwan() == false)
+    {
+        day++;
+        BrokenWater();
+        waterQ = tempWaterQ;
+        swanQ = tempSwanQ;
+        Clear(tempSwanQ);
+        Clear(tempWaterQ);
+    }
+
+    cout<<day;
 }
