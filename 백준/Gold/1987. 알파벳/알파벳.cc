@@ -1,47 +1,43 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-int dy[4]{0,-1,0,1}, dx[4]{-1,0,1,0};
-
-int r,c,ret = 1;
+int dy[4]{0, -1, 0, 1}, dx[4]{-1, 0, 1, 0};
+int r, c, ret;
+int a;
 char arr[21][21];
-int eng[26];
 
-void DFS(int y, int x, int count)
-{    
-    for(int i = 0;i<4;i++)
+void DFS(int y, int x, int cnt)
+{
+    for (int i = 0; i < 4; i++)
     {
-        int ny = dy[i]+y;
-        int nx= dx[i]+x;
-
-        if(ny<0||ny>=r||nx<0||nx >=c)
+        int ny =dy[i] + y;
+        int nx = dx[i] + x;
+        if (ny < 0 || r <= ny || nx < 0 || c <= nx)
             continue;
-        if(eng[arr[ny][nx] - 'A'] != 0)
+        int as = (1 << (arr[ny][nx] - 'A'));
+        if ((a & as) == 0)
         {
-            ret = max(ret, count);
-            continue;
+            a |= as;
+            DFS(ny, nx, cnt + 1);
+            a &= ~as;
         }
-
-        eng[arr[ny][nx] - 'A'] = 1;
-        DFS(ny,nx,count+1);
-        eng[arr[ny][nx] - 'A'] = 0;
     }
+    ret = max(ret, cnt);
 }
 
 int main()
 {
-    cin>>r>>c;
-
-    for(int i = 0; i<r; i++)
+    cin >> r >> c;
+    for (int i = 0; i < r; i++)
     {
-        for(int j = 0; j<c;j++)
+        for (int j = 0; j < c; j++)
         {
-            cin>>arr[i][j];
+            cin >> arr[i][j];
         }
     }
-    eng[arr[0][0] - 'A'] = 1;
-    DFS(0,0,1);
+    a |= (1 << (arr[0][0] - 'a'));
+    DFS(0, 0, 1);
 
-    cout<<ret;
+    cout << ret;
 }
