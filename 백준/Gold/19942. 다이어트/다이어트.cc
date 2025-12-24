@@ -1,70 +1,60 @@
-#include <iostream>
-#include <vector>
-#include <queue>
+#include<bits/stdc++.h>
 
 using namespace std;
-const int INF = 987654321;
-int n;
-int mp,mf,ms,mv;
-vector<vector<int>> v;
-int ret = INF;
-vector<int> node;
 
-void Solution(int x, int sum, vector<int> temp, vector<int> t)
+int n, mp,mf,ms, mv;
+int arr[16][5];
+int ret = 987654321;
+vector<vector<int>> vi;
+vector<int> temp;
+
+void Solution(int idx, int p, int f, int s, int v, int sum)
 {
-	if (temp[0]>= mp && temp[1] >= mf && temp[2]>=ms&&temp[3] >= mv)
-	{
-		if (ret > sum)
-		{
-			ret = sum;
-			node = t;
-		}
-		return;
-	}
+    if(mp <= p && mf <= f && ms <= s && mv <= v)
+    {
+        // cout<<sum<<endl;
+        if(ret > sum)
+        {
+            ret = sum;
+            vi.clear();
+            vi.push_back(temp);
+        }
+        else if(ret == sum)
+        vi.push_back(temp);
+        
+        return;
+    }
+    if(idx > n)
+        return;
 
-	for (int i = x+1; i <= n; i++)
-	{
-		temp[0] += v[i][0];
-		temp[1] += v[i][1];
-		temp[2] += v[i][2];
-		temp[3] += v[i][3];
-		t.push_back(i);
-		Solution(i, sum + v[i][4], temp,t);
-		t.pop_back();
-		temp[0] -= v[i][0];
-		temp[1] -= v[i][1];
-		temp[2] -= v[i][2];
-		temp[3] -= v[i][3];
-	}
+    temp.push_back(idx);
+    Solution(idx+1, p+arr[idx][0], f+arr[idx][1],s+ arr[idx][2],v+ arr[idx][3],sum+arr[idx][4]);
+    temp.pop_back();
+    Solution(idx+1, p, f, s,v,sum);
 }
 
 int main()
 {
-	cin >> n;
-	cin >> mp >> mf >> ms >> mv;
-	v.assign(n+1,vector<int>(5,0));
-	for (int i = 1; i <= n; i++)
-		cin >> v[i][0] >> v[i][1] >> v[i][2] >> v[i][3] >> v[i][4];
-	
-	for (int i = 1; i <= n; i++)
-	{
-		vector<int> t;
-		vector<int> temp;
-		t.push_back(i);
-		temp.push_back(v[i][0]);
-		temp.push_back(v[i][1]);
-		temp.push_back(v[i][2]);
-		temp.push_back(v[i][3]);
-		Solution(i, v[i][4],temp,t);
-	}
+    cin>>n;
+    cin>>mp>>mf>>ms>>mv;
     
-    if(ret == INF)
-        cout<<-1;
-    else
+    for(int i = 1; i <= n; i++)
     {
-        cout << ret << "\n";
-	    for (int i : node)
-		    cout << i << " ";    
+        cin>>arr[i][0]>>arr[i][1]>>arr[i][2]>>arr[i][3]>>arr[i][4];
     }
-	
+
+    Solution(1,0,0,0,0,0);
+
+    if(vi.size() == 0)
+    {
+        cout<<-1;
+        return 0;
+    }
+
+    sort(vi.begin(), vi.end());
+    cout<<ret<<"\n";
+    for(int i = 0; i<vi[0].size(); i++)
+    {
+        cout<<vi[0][i]<<" ";
+    }
 }
