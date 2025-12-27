@@ -1,86 +1,80 @@
-#include <iostream>
-#include <queue>
-#include <string>
-#include <vector>
+#include <bits/stdc++.h>
 
 using namespace std;
 
 int t, n;
-string p,s;
-
-
+string p, s;
 
 int main()
 {
-	cin >> t;
-	while (t > 0)
-	{
-		cin >> p;
-		cin >> n;
-		cin >> s;
-		deque<string> v;
-		int index{};
-		string temp{};
-		for (int i = 1; i < s.size()-1; i++)
-		{
-			if (s[i] == ',')
-			{
-				v.insert(v.begin() + index++, temp);
-				temp = {};
-			}
-			else
-				temp += s[i];
-		}
-		if (temp.empty() == false)
-			v.insert(v.begin()+index,temp);
+    cin>>t;
 
-		bool rev{};
-		bool ret{};
-		for (int i = 0; i < p.size(); i++)
-		{
-			if (p[i] == 'R')
-				rev = !rev;
-			else
-			{
-				if (v.empty() == true)
-				{
-					ret = true;
-					break;
-				}
-				else if (rev == false)
-					v.pop_front();
-				else if (rev == true)
-					v.pop_back();
-			}
-		}
-		vector<int> result;
-		index = 0;
-		if (ret == true)
-			cout << "error\n";
-		else
-		{
-			if (rev == true)
-			{
-				for (auto i = v.rbegin(); i != v.rend(); i++)
-				{
-					result.push_back(stoi(*i));
-				}
-			}
-			else
-			{
-				for (auto c : v)
-					result.push_back(stoi(c));
-			}
+    while(t--)
+    {
+        deque<int> dq;
+        cin>>p;
+        cin>>n;
+        cin>>s;
+        
+        int x{};
+        for(int i = 0; i< s.size(); i++)
+        {
+            if(s[i] == '[' || s[i] == ']')
+                continue;
+            else if('0'<= s[i] && s[i] <='9')
+            {
+                x = x*10 + (s[i] - '0');
+            }
+            else
+            {
+                dq.push_back(x);
+                x = 0;
+            }
+        }
+        if(0 < x)
+            dq.push_back(x);
 
-			cout << "[";
-			for (int i = 0; i < v.size(); i++)
-			{
-				cout << result[i];
-				if (i != v.size() - 1)
-					cout << ",";
-			}
-			cout << "]\n";
-		}
-		t--;
-	}
+        bool b{};
+        bool error{};
+        for(char c : p)
+        {
+            if(c == 'R')
+            {
+                b = !b;
+            }
+            else 
+            {
+                if(dq.empty() == true)
+                {
+                    error = true;
+                    break;
+                }
+                if(b == true)
+                    dq.pop_back();
+                else
+                    dq.pop_front();
+            }
+        }
+
+        if(error == true)
+        {
+            cout<<"error\n";
+            continue;
+        }
+        else
+        {
+            cout<<"[";
+            if(b == true)
+                reverse(dq.begin(), dq.end());
+            for(int i = 0; i < dq.size(); i++)
+            {
+                cout<<dq[i];
+                if(i < dq.size() - 1)
+                    cout<<",";
+            }
+            cout<<"]\n";
+        }
+
+    }
 }
+
