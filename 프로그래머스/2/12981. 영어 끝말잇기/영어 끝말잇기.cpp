@@ -1,51 +1,25 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include<unordered_map>
-
+#include <set>
 using namespace std;
 
 vector<int> solution(int n, vector<string> words) {
     vector<int> answer;
+    set<string> se;
 
-    unordered_map<string, int> m;
-    int temp = 1;
-    string stemp{};
-    vector<int> count(n+1,0);
-    for(string s : words)
-    {
-        cout << s << " "<< temp << endl;
-        if(m.empty() == true)
-            m.insert({s,temp});
-        else
-        {
-            if(stemp[stemp.size()-1] != s[0])
-            {
-                answer.push_back(temp);
-                answer.push_back(count[temp]+1);
-                return answer;
-            }
-                        
-            if(m.find(s) != m.end())
-            {
-                answer.push_back(temp);
-                answer.push_back(count[temp]+1);
-                break;
-            }
-            else
-                m.insert({s,temp});
-        }
-        count[temp]++;
-        temp++;
-        if(temp > n)
-            temp = 1;
-        stemp = s;
-    }
-    if(answer.empty() == true)
-    {
-        answer.push_back(0);
-        answer.push_back(0);
-    }
-
-    return answer;
+    string temp{};
+    int idx = 0, idx2 = 0;  
+    int cnt{};
+    for(auto iter : words)
+    { 
+        if(se.find(iter) != se.end() || (temp != "" && iter.front() != temp.back()))
+        { 
+            return {idx % n +1, idx2 / n  + 1};
+        } 
+        temp = iter;
+        se.insert(iter); 
+        idx++;idx2++;
+    } 
+    return {0, 0}; 
 }
