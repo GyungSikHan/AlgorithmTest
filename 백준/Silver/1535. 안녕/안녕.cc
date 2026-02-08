@@ -1,48 +1,48 @@
-// https://www.acmicpc.net/problem/1535
-#include <iostream>
-#include <vector>
+#include<bits/stdc++.h>
 
 using namespace std;
 
-int n;
-vector<int> L, J;
-int hp = 100;
-int happy;
+int n,ret = -987654321;
+vector<int> v, v2;
 
-void DFS(int index, int HP, int Happy)
+void Solution(int hp, int happy, int idx)
 {
-    if (HP <= 0)
-    {
-        happy = max(happy, Happy - J[index-1]);
-        return;
-    }
-    if (index == n)
-    {
-        happy = max(Happy, happy);
-    }
+	if (hp<= 0)
+	{
+		ret = max(ret , happy - v2[idx - 1]);
+		return;
+	}
+	if (idx == n)
+	{
+		ret = max(ret, happy);
+		return;
+	}
+	for (int i = idx; i< n; i++)
+	{
+		Solution(hp - v[i], happy + v2[i], i + 1);
+	}
 
-    for (int i = index; i < n; i++)
-    {
-        DFS(i + 1, HP - L[i], Happy + J[i]);
-    }
 }
 
 int main()
 {
-    cin >> n;
-    L.resize(n, 0);
-    J.resize(n, 0);
+	ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
+	cout.tie(nullptr);
+	cin >> n;
+	v.resize(n, 0);
+	v2.resize(n,0);
 
-    for (int i = 0; i < n; i++)
-        cin >> L[i];
-    for (int i = 0; i < n; i++)
-        cin >> J[i];
+	for (int i = 0; i < n; i++)
+		cin >> v[i];
 
-    for (int i = 0; i < n; i++)
-    {
-        DFS(i, 100, 0);
-    }
+	for (int i = 0; i < n; i++)
+		cin >> v2[i];
 
-    cout<<happy<<endl;
+	for (int i = 0; i< n; i++)
+	{
+		Solution(100, 0 ,i);
+	}
 
+	cout << ret;
 }
