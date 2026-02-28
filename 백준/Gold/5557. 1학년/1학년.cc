@@ -1,44 +1,42 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
-int n, cnt;
-vector<int> v;
+int n;
+vector<int>v;
 long long dp[104][21];
-//string str;
 
-long long Solution(int sum, int idx)
+long long go(int idx, int sum)
 {
-    if(sum > 20 || sum < 0)
-    {
-        //cout<<endl;
-        //cout<<sum<<"is False"<<endl<<endl;
-        return 0;
-    }
-    long long& ret = dp[idx][sum];
-    if (ret)
-        return ret;
-    if (idx == n -2)
-    {
-        //cout << str << endl << endl;
-        if (sum == v[n - 1])
-            return 1;
-        return 0;
-    }
+	if (sum < 0 || sum > 20)
+		return 0;
+	
+	long long & ret = dp[idx][sum];
 
-    //str += "+" + to_string(v[idx + 1]);
-    ret += Solution(sum + v[idx + 1], idx + 1);
-    //str.at(str.size() - 2) = '-';
-    ret += Solution(sum - v[idx + 1], idx + 1);
-    //str.erase(str.size() - 2, 2);
-    return ret;
+	if (ret)
+		return ret;
+	if (idx == n-2)
+	{
+		if (sum == v[n - 1])
+			return 1;
+		return 0;
+	}
+
+	ret +=go(idx + 1,sum+ v[idx + 1]);
+	ret +=go(idx + 1,sum- v[idx + 1]);
+	
+	return ret;
 }
 
 int main()
 {
-    cin>>n;
-    v.resize(n, 0);
-    for(int i = 0; i < n ; i++)
-        cin>>v[i];
-    //str = to_string(v[0]);
-    cout<<Solution(v[0], 0);
+	cin >> n;
+	v.resize(n,0);
+
+	for (int i = 0; i < n; i++)
+		cin >> v[i];
+
+	cout<< go(0, v[0]);
 }
+
+//dp를 [idx][sum]을 기준으로 되는지 안되는지 판단, 0 or 1
