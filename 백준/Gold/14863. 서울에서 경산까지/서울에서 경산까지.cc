@@ -1,50 +1,29 @@
-#include <bits/stdc++.h>
+#include <bits/stdc++.h> 
+using namespace std; 
+typedef long long ll; 
+int n, k, dp[101][100001]; 
+struct B{
+    int _time, pay; 
+}; 
+B a[101], b[101];
 
-using namespace std;
-
-int n, k;
-vector<int>wt,wc,bt,bc;
-long long dp[104][100004];
-int m;
-
-int go(int idx, int times, int sum)
-{
-	if (times > k)
-		return 0;
-	long long & ret = dp[idx][times];
-	if (idx == n)
-	{
-		if (sum > m)
-		{
-			m = sum;
-			return 1;
-		}
-		return 0;
-	}
-
-	if (ret)
-		return 1;
-
-	go(idx + 1, times + wt[idx], sum + wc[idx]);
-	go(idx+1, times+bt[idx], sum+bc[idx]);
-
-	return ret;
+int go(int here, int _time){
+    if(here == n) return 0;  
+    int &ret = dp[here][_time]; 
+    if(ret) return ret; 
+    ret = -1e6;
+    if(_time - a[here]._time >= 0)ret = max(ret, go(here + 1, _time - a[here]._time) + a[here].pay); 
+    if(_time - b[here]._time >= 0)ret = max(ret, go(here + 1, _time - b[here]._time) + b[here].pay); 
+    return ret; 
 }
-
-int main()
-{
-	cin >> n >> k;
-	
-	for (int i=0;i<n;i++)
-	{
-		int w{}, c{}, b{}, c2{};
-		cin >> w >> c >> b >> c2;
-		wt.push_back(w);
-		wc.push_back(c);
-		bt.push_back(b);
-		bc.push_back(c2);
-	}
-
-	go(0, 0, 0);
-	cout << m;
+int main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL); 
+    cin >> n >> k; 
+    for(int i = 0; i < n; i++){
+        cin >> a[i]._time >> a[i].pay >> b[i]._time >> b[i].pay; 
+    } 
+    cout << go(0, k) << "\n"; 
+    return 0;
 }
